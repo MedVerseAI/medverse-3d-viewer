@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MedVerse — Medical 3D Anatomy Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Confetti Library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --bg-body: #f8fafc;
+  --bg-card: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --border: #e2e8f0;
+  --good: #10b981;
+  --danger: #ef4444;
+  --radius: 16px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg-body);color:var(--text-dark)}
+button,input{font:inherit}
+button{color:inherit}
+
+/* Header Navbar */
+.navbar{
+  height:68px;background:#ffffff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;z-index:50;position:relative;
+}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+.brand-icon{
+  width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0ea5e9);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 2px 8px rgba(2,132,199,0.25);
+}
+.brand-title{font-size:16px;font-weight:800;letter-spacing:-0.02em}
+.brand-badge{font-size:10px;background:#e0f2fe;color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700}
+
+.nav-tabs{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px}
+.nav-tab{border:0;background:transparent;padding:7px 18px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:.15s}
+.nav-tab:hover{color:var(--text-dark)}
+.nav-tab.active{background:#ffffff;color:var(--primary);box-shadow:0 1px 3px rgba(0,0,0,0.08);font-weight:700}
+
+/* App Main Container (Fixed 100vh Landscape Layout) */
+#app-main{height:calc(100vh - 68px);position:relative;overflow:hidden}
+.page-view{display:none;height:100%;padding:28px 36px;overflow:hidden}
+.page-view.active{display:flex}
+
+/* ==========================================================================
+   VIEW 1: AESTHETIC LANDSCAPE HOME
+   ========================================================================== */
+#view-overview{gap:48px;align-items:center}
+.overview-left{width:460px;flex-shrink:0;display:flex;flex-direction:column;gap:22px}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--primary);background:#e0f2fe;padding:5px 14px;border-radius:100px;width:max-content;text-transform:uppercase}
+.hero-h1{font-size:42px;font-weight:800;line-height:1.15;letter-spacing:-0.03em}
+.hero-desc{font-size:15px;color:var(--text-muted);line-height:1.65}
+.hero-actions{display:flex;gap:12px;margin-top:6px}
+
+/* Aesthetic Pill Buttons */
+.btn-pill-primary{
+  background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border:0;padding:13px 26px;
+  border-radius:100px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s;
+  box-shadow:0 4px 14px rgba(2,132,199,0.28);display:inline-flex;align-items:center;gap:8px;
+}
+.btn-pill-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(2,132,199,0.38)}
+.btn-pill-secondary{
+  background:#ffffff;border:1px solid var(--border);color:var(--text-dark);padding:13px 24px;
+  border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s;
+  display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.03);
+}
+.btn-pill-secondary:hover{background:#f1f5f9;border-color:#cbd5e1}
+
+.overview-right{flex:1;min-width:0;height:100%;max-height:580px;position:relative}
+.viewport-card{
+  background:#090d16;border-radius:var(--radius);border:1px solid #1e293b;
+  box-shadow:0 24px 50px rgba(15,23,42,0.1);height:100%;width:100%;position:relative;overflow:hidden;
+}
+.viewport-hud{position:absolute;top:16px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;z-index:20;pointer-events:none}
+.hud-tag{font:10px 'JetBrains Mono';color:#38bdf8;background:rgba(14,165,233,0.15);padding:4px 10px;border-radius:6px;border:1px solid rgba(56,189,248,0.3)}
+.hud-hint{font:10px 'JetBrains Mono';color:#94a3b8}
+
+/* Home Minimal Zoom Bar */
+.home-zoom-bar{
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+  background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border:1px solid #334155;
+  border-radius:100px;padding:6px 16px;display:flex;align-items:center;gap:10px;z-index:20;
+}
+.home-zoom-bar button{width:22px;height:22px;background:rgba(255,255,255,0.08);border:0;color:#fff;border-radius:50%;cursor:pointer;display:grid;place-items:center;font-size:14px}
+.home-zoom-bar input{width:140px;accent-color:var(--primary);cursor:pointer}
+
+/* ==========================================================================
+   VIEW 2: ANATOMY LAB
+   ========================================================================== */
+#view-lab{gap:20px;height:100%}
+.lab-sidebar{
+  width:320px;flex-shrink:0;background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.03);
+}
+.sidebar-head{padding:14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px}
+.search-input{width:100%;height:34px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:12.5px;outline:none}
+.search-input:focus{border-color:var(--primary)}
+.filter-tabs{display:flex;gap:4px;background:#f1f5f9;padding:3px;border-radius:8px}
+.filter-tab{flex:1;border:0;background:transparent;padding:5px;font-size:11px;font-weight:600;color:var(--text-muted);border-radius:6px;cursor:pointer}
+.filter-tab.active{background:#ffffff;color:var(--primary);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,0.05)}
+
+.structure-list{flex:1;overflow-y:auto;padding:8px}
+.structure-list::-webkit-scrollbar{width:5px}
+.structure-list::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:5px}
+
+.section-title{font:10px 'JetBrains Mono';font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;padding:10px 8px 4px;display:flex;justify-content:space-between}
+.group-row{
+  display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;
+  cursor:pointer;transition:.15s;margin-bottom:2px;font-size:12.5px;user-select:none;
+}
+.group-row:hover{background:#f1f5f9}
+.eye-btn{border:0;background:transparent;cursor:pointer;color:#94a3b8;display:grid;place-items:center;width:22px;height:22px}
+.eye-btn.on{color:var(--primary)}
+.color-dot{width:8px;height:8px;border-radius:50%}
+.group-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.group-count{font:9px 'JetBrains Mono';color:#94a3b8}
+
+.lab-stage-wrap{flex:1;min-width:0;height:100%;position:relative;background:#090d16;border-radius:var(--radius);border:1px solid #1e293b;overflow:hidden}
+
+/* Unified Floating Controls Card */
+.controls-hud-card{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  background:rgba(15,23,42,0.92);backdrop-filter:blur(16px);border:1px solid #334155;
+  border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;
+  z-index:30;box-shadow:0 14px 40px rgba(0,0,0,0.45);
+}
+.hud-row-tools{display:flex;align-items:center;gap:6px}
+.tool-btn{border:0;background:rgba(255,255,255,0.06);color:#f8fafc;padding:5px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;transition:.15s}
+.tool-btn:hover{background:rgba(255,255,255,0.14)}
+.tool-btn.active{background:var(--primary);color:#fff}
+.tool-divider{width:1px;height:18px;background:#334155;margin:0 4px}
+
+.zoom-bar{display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px}
+.zoom-bar button{width:22px;height:22px;background:rgba(255,255,255,0.08);border:0;color:#fff;border-radius:5px;cursor:pointer;font-size:14px;display:grid;place-items:center}
+.zoom-slider{flex:1;accent-color:var(--primary);cursor:pointer;height:4px}
+.zoom-lbl{font:8.5px 'JetBrains Mono';color:#94a3b8;letter-spacing:0.06em}
+
+/* Floating Inspector Card in Lab */
+#lab-inspector{
+  position:absolute;top:16px;right:16px;width:260px;background:rgba(15,23,42,0.92);
+  backdrop-filter:blur(16px);border:1px solid #334155;border-radius:12px;padding:14px;
+  color:#fff;display:none;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+.insp-head{font:9.5px 'JetBrains Mono';color:#38bdf8;text-transform:uppercase;margin-bottom:4px}
+.insp-title{font-size:13px;font-weight:700;margin-bottom:10px}
+.insp-kv{display:flex;justify-content:space-between;font-size:11.5px;color:#94a3b8;padding:4px 0;border-top:1px solid rgba(255,255,255,0.06)}
+.insp-kv b{color:#f8fafc}
+
+/* ==========================================================================
+   VIEW 3: CLINICAL EXAM
+   ========================================================================== */
+#view-quiz{gap:20px;height:100%}
+.quiz-left-panel{width:360px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
+
+/* Outer Category Tabs for Quiz */
+.quiz-outer-tabs{display:flex;gap:4px;background:#e2e8f0;padding:4px;border-radius:10px}
+.quiz-tab-btn{flex:1;border:0;background:transparent;padding:6px;font-size:12px;font-weight:600;color:var(--text-muted);border-radius:7px;cursor:pointer;transition:.15s}
+.quiz-tab-btn.active{background:#ffffff;color:var(--primary);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+
+/* Compact Aesthetic Question Card */
+.quiz-card{
+  background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 4px 14px rgba(0,0,0,0.03);
+}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px}
+.quiz-prog{font:12px 'JetBrains Mono';font-weight:700;color:var(--primary)}
+.quiz-score-badge{font:12px 'JetBrains Mono';background:#f1f5f9;padding:4px 10px;border-radius:6px;font-weight:700}
+
+.quiz-question-box{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:14px}
+.quiz-sub{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em}
+.quiz-target{
+  font-size:16px;font-weight:800;color:var(--text-dark);margin-top:4px;line-height:1.35;
+  word-break:break-word;overflow-wrap:anywhere;
+}
+
+.quiz-feedback{padding:11px 13px;border-radius:8px;font-size:12px;display:none;font-weight:500;line-height:1.45;word-break:break-word}
+.quiz-feedback.correct{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+.quiz-feedback.wrong{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+
+.quiz-stage-wrap{flex:1;min-width:0;height:100%;position:relative;background:#090d16;border-radius:var(--radius);border:1px solid #1e293b;overflow:hidden}
+
+/* Shared Canvas Element */
+canvas{width:100% !important;height:100% !important;display:block;outline:none}
+
+/* Loading Screen */
+#app-loader{position:fixed;inset:0;background:#fff;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.spin{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--primary);border-radius:50%;animation:rotate .8s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="navbar">
+    <div class="brand" onclick="switchView('overview')">
+      <div class="brand-icon">+</div>
+      <div>
+        <div class="brand-title">MedVerse</div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-btn-overview" onclick="switchView('overview')">Home</button>
+      <button class="nav-tab" id="tab-btn-lab" onclick="switchView('lab')">Anatomy Lab</button>
+      <button class="nav-tab" id="tab-btn-quiz" onclick="switchView('quiz')">Quiz</button>
+    </div>
+  </header>
+
+  <main id="app-main">
+
+    <!-- ==================================================================
+         VIEW 1: AESTHETIC LANDSCAPE OVERVIEW (HOME)
+         ================================================================== -->
+    <section class="page-view active" id="view-overview">
+      <div class="overview-left">
+        <h1 class="hero-h1">Interactive Neuro-Spinal 3D Anatomy Platform.</h1>
+        <p class="hero-desc">
+          An intuitive educational environment bridging scientific 3D atlases into real-time medical training. Students can explore, dissect, and isolate complex structures in the 3D Lab, or evaluate spatial identification skills in the Quiz.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-pill-primary" onclick="switchView('lab')">Open Anatomy Lab →</button>
+          <button class="btn-pill-secondary" onclick="switchView('quiz')">Quiz</button>
+        </div>
+      </div>
+
+      <div class="overview-right">
+        <div class="viewport-card" id="overview-stage">
+          <div class="viewport-hud">
+            <span class="hud-tag">INTERACTIVE PREVIEW</span>
+            <span class="hud-hint">Click & drag to orbit</span>
+          </div>
+
+          <!-- Minimal Zoom Bar on Home -->
+          <div class="home-zoom-bar">
+            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <input type="range" min="0" max="1000" value="500" id="zoom-home" oninput="applyZoomPercent(this.value)">
+            <button onclick="applyZoomOffset(0.06)">+</button>
+            <button onclick="resetCamera()" style="font-size:11px;padding:0 10px;width:auto;border-radius:100px;margin-left:4px">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         VIEW 2: ANATOMY LAB
+         ================================================================== -->
+    <section class="page-view" id="view-lab">
+      <!-- Left Structure Directory -->
+      <aside class="lab-sidebar">
+        <div class="sidebar-head">
+          <input class="search-input" id="lab-search" placeholder="Filter anatomy structures…">
+          <div class="filter-tabs">
+            <button class="filter-tab active" id="filter-all" onclick="filterCategory('all')">All</button>
+            <button class="filter-tab" id="filter-brain" onclick="filterCategory('brain')">Brain</button>
+            <button class="filter-tab" id="filter-spine" onclick="filterCategory('spine')">Spine</button>
+          </div>
+        </div>
+        <div class="structure-list" id="lab-tree"></div>
+      </aside>
+
+      <!-- Right 3D Stage -->
+      <div class="lab-stage-wrap" id="lab-stage">
+        <button id="btn-exit-isolate" onclick="restoreFromIsolation()" style="display:none;position:absolute;top:16px;left:16px;z-index:30;background:#0284c7;color:#fff;border:0;padding:8px 16px;border-radius:100px;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.4)">
+          ✕ Exit Isolation
+        </button>
+        <!-- Floating Inspector -->
+        <div id="lab-inspector">
+          <div class="insp-head">Selected Structure</div>
+          <div class="insp-title" id="insp-name">—</div>
+          <div class="insp-kv"><span>Group:</span><b id="insp-group">—</b></div>
+          <div class="insp-kv"><span>Dataset:</span><b id="insp-source">—</b></div>
+        </div>
+
+        <!-- Controls HUD in Lab -->
+        <div class="controls-hud-card" id="hud-lab">
+          <div class="hud-row-tools">
+            <button class="tool-btn" onclick="setPreset('front')">Front</button>
+            <button class="tool-btn" onclick="setPreset('back')">Back</button>
+            <button class="tool-btn" onclick="setPreset('left')">Left</button>
+            <button class="tool-btn" onclick="setPreset('right')">Right</button>
+            <button class="tool-btn" onclick="setPreset('top')">Top</button>
+            <div class="tool-divider"></div>
+            <button class="tool-btn" id="tool-wire-lab" onclick="toggleWireframe()">Wire</button>
+            <button class="tool-btn" id="tool-grid-lab" onclick="toggleGrid()">Grid</button>
+            <button class="tool-btn" id="tool-axes-lab" onclick="toggleAxes()">Axes</button>
+            <button class="tool-btn" onclick="resetCamera()">Reset</button>
+          </div>
+          <div class="zoom-bar">
+            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <input type="range" class="zoom-slider" id="zoom-lab" min="0" max="1000" value="500" oninput="applyZoomPercent(this.value)">
+            <button onclick="applyZoomOffset(0.06)">+</button>
+            <span class="zoom-lbl">ZOOM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         VIEW 3: QUIZ
+         ================================================================== -->
+    <section class="page-view" id="view-quiz">
+      <div class="quiz-left-panel">
+        <!-- Outside Tabs -->
+        <div class="quiz-outer-tabs">
+          <button class="quiz-tab-btn active" id="quiz-filter-all" onclick="setQuizFilter('all')">Full Anatomy</button>
+          <button class="quiz-tab-btn" id="quiz-filter-brain" onclick="setQuizFilter('brain')">Brain</button>
+          <button class="quiz-tab-btn" id="quiz-filter-spine" onclick="setQuizFilter('spine')">Spine</button>
+        </div>
+
+        <!-- Compact Question Card -->
+        <div class="quiz-card">
+          <div class="quiz-meta">
+            <span class="quiz-prog" id="quiz-prog-text">Question 1 of 5</span>
+            <span class="quiz-score-badge">Score: <b id="quiz-score-display">0</b></span>
+          </div>
+
+          <div class="quiz-question-box">
+            <div class="quiz-sub">Locate and click on:</div>
+            <div class="quiz-target" id="quiz-target-display">—</div>
+          </div>
+
+          <div class="quiz-feedback" id="quiz-feedback"></div>
+
+          <button class="btn-pill-primary" id="btn-quiz-next" style="width:100%;justify-content:center">Skip Question</button>
+        </div>
+      </div>
+
+      <!-- Right 3D Viewport in Quiz Mode -->
+      <div class="quiz-stage-wrap" id="quiz-stage">
+        <!-- Controls HUD in Quiz (Includes Grid now!) -->
+        <div class="controls-hud-card" id="hud-quiz">
+          <div class="hud-row-tools">
+            <button class="tool-btn" onclick="setPreset('front')">Front</button>
+            <button class="tool-btn" onclick="setPreset('back')">Back</button>
+            <button class="tool-btn" onclick="setPreset('left')">Left</button>
+            <button class="tool-btn" onclick="setPreset('right')">Right</button>
+            <button class="tool-btn" onclick="setPreset('top')">Top</button>
+            <div class="tool-divider"></div>
+            <button class="tool-btn" id="tool-wire-quiz" onclick="toggleWireframe()">Wire</button>
+            <button class="tool-btn" id="tool-grid-quiz" onclick="toggleGrid()">Grid</button>
+            <button class="tool-btn" id="tool-axes-quiz" onclick="toggleAxes()">Axes</button>
+            <button class="tool-btn" onclick="resetCamera()">Reset</button>
+          </div>
+          <div class="zoom-bar">
+            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <input type="range" class="zoom-slider" id="zoom-quiz" min="0" max="1000" value="500" oninput="applyZoomPercent(this.value)">
+            <button onclick="applyZoomOffset(0.06)">+</button>
+            <span class="zoom-lbl">ZOOM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Loading Screen -->
+  <div id="app-loader">
+    <div class="spin"></div>
+    <div style="font-size:12.5px;font-weight:600;color:var(--text-muted)">Loading MedVerse…</div>
+  </div>
+
+<!-- Three.js Setup -->
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+const MODEL_URL = './model.glb';
+const GROUP_LABELS={CEREBELLUM:'Cerebellum',BRAINSTEM:'Brainstem',SUBCORTICAL_STRUCTURES:'Subcortical structures',OTHER_BRAIN_STRUCTURES:'White matter / ventricles',CRANIAL_NERVES:'Cranial nerves',VERTEBRAE:'Vertebrae',INTERVERTEBRAL_DISCS:'Intervertebral discs',SPINAL_CORD:'Spinal cord',CEREBRAL_CORTEX_L:'Cerebral cortex — Left',CEREBRAL_CORTEX_R:'Cerebral cortex — Right',CEREBRAL_CORTEX:'Cerebral cortex',UNGROUPED:'Other anatomy'};
+const GROUP_ORDER=['CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES','CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX','VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD','UNGROUPED'];
+const BRAIN_GROUPS=new Set(['CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES','CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX']);
+const SPINE_GROUPS=new Set(['VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD']);
+
+let currentView = 'overview';
+
+/* SVG Icons for eye button */
+const EYE_ON_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const EYE_OFF_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20"/></svg>`;
+
+/* Scene, Camera, Renderer */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x090d16);
+
+const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 5000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.08;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.075;
+controls.rotateSpeed = 0.65;
+controls.enableZoom = false; // Zoom strictly via HUD sliders
+controls.autoRotate = false; // Strictly click & drag
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x0c1528, 1.4));
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.7); keyLight.position.set(4, 6, 7); scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(0x7fcfff, 0.75); fillLight.position.set(-5, 1, -4); scene.add(fillLight);
+const rimLight = new THREE.DirectionalLight(0xc9a9ff, 0.55); rimLight.position.set(1, -3, -6); scene.add(rimLight);
+
+const loader = new GLTFLoader();
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+loader.setDRACOLoader(draco);
+
+let allMeshes = [], meshGroups = new Map();
+let modelCenter = new THREE.Vector3(), modelRadius = 1;
+let defaultCamPos = new THREE.Vector3(), defaultTarget = new THREE.Vector3();
+let hover = null, hoverEdges = null, gridHelper = null, axesHelper = null, cameraTween = null, isWireframe = false;
+let zoomT = 0.5;
+
+function cleanStructureName(raw){
+  if(!raw) return 'Unnamed Structure';
+  let s = raw.replace(/__?[A-Za-z0-9]+$/g, '').replaceAll('_', ' ').trim();
+  return s.replace(/(^|\s)\S/g, l => l.toUpperCase());
+}
+
+function structureName(o){
+  const u = o.userData || {};
+  return cleanStructureName(u.bn_region_name || o.name || 'Unnamed structure');
+}
+
+function groupKeyFor(o){
+  const u = o.userData || {};
+  if(u.source === 'Human Brainnetome' || u.bn_region_id !== undefined){
+    if(u.hemisphere === 'L') return 'CEREBRAL_CORTEX_L';
+    if(u.hemisphere === 'R') return 'CEREBRAL_CORTEX_R';
+    return 'CEREBRAL_CORTEX';
+  }
+  return u.bp3d_group || 'UNGROUPED';
+}
+
+function registerMesh(m){
+  allMeshes.push(m);
+  const k = groupKeyFor(m);
+  if(!meshGroups.has(k)){
+    const c = m.material?.color ? m.material.color.clone() : new THREE.Color(0x9aa8bb);
+    meshGroups.set(k, { key: k, meshes: [], color: c, visible: true });
+  }
+  meshGroups.get(k).meshes.push(m);
+}
+
+loader.load(MODEL_URL, gltf => {
+  scene.add(gltf.scene);
+  gltf.scene.traverse(o => {
+    if(o.isMesh){
+      o.userData = { ...(o.userData || {}) };
+      registerMesh(o);
+    }
+  });
+
+  const box = new THREE.Box3().setFromObject(gltf.scene);
+  modelCenter.copy(box.getCenter(new THREE.Vector3()));
+  const size = box.getSize(new THREE.Vector3());
+  modelRadius = Math.max(size.x, size.y, size.z) || 1;
+
+  const dist = (modelRadius / 2) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.65;
+  defaultTarget.copy(modelCenter);
+  defaultCamPos.copy(modelCenter).add(new THREE.Vector3(0, dist * 0.12, dist));
+  camera.position.copy(defaultCamPos);
+  controls.target.copy(defaultTarget);
+  controls.update();
+
+  buildLabTree();
+  mountCanvas('overview-stage');
+  document.getElementById('app-loader').remove();
+}, undefined, err => {
+  console.error(err);
+  document.getElementById('app-loader').innerHTML = '<div style="color:red">Failed to load model.glb</div>';
+});
+
+function mountCanvas(containerId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.appendChild(renderer.domElement);
+  requestAnimationFrame(() => {
+    const rect = container.getBoundingClientRect();
+    if(rect.width && rect.height){
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(rect.width, rect.height);
+    }
+  });
+}
+
+/* ==========================================================================
+   VIEW ROUTER (TABS)
+   ========================================================================== */
+window.switchView = function(view){
+  currentView = view;
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  document.getElementById(`tab-btn-${view}`).classList.add('active');
+  document.getElementById(`view-${view}`).classList.add('active');
+
+  clearHover();
+
+  if(view === 'overview'){
+    mountCanvas('overview-stage');
+    showCategory('all');
+    resetCamera();
+  } else if(view === 'lab'){
+    mountCanvas('lab-stage');
+    showCategory('all');
+    resetCamera();
+  } else if(view === 'quiz'){
+    mountCanvas('quiz-stage');
+    showCategory(quizFilter);
+    startQuiz();
+  }
+};
+
+/* Camera Tween & Presets */
+function startCameraTween(to, target, duration = 600){
+  cameraTween = { start: performance.now(), duration, fromPos: camera.position.clone(), fromTarget: controls.target.clone(), toPos: to.clone(), toTarget: target.clone() };
+  controls.enabled = false;
+}
+function updateCameraTween(now){
+  if(!cameraTween) return;
+  const t = Math.min(1, (now - cameraTween.start) / cameraTween.duration), e = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
+  camera.position.lerpVectors(cameraTween.fromPos, cameraTween.toPos, e);
+  controls.target.lerpVectors(cameraTween.fromTarget, cameraTween.toTarget, e);
+  if(t >= 1){ cameraTween = null; controls.enabled = true; }
+  controls.update();
+}
+
+window.resetCamera = () => {
+  startCameraTween(defaultCamPos, defaultTarget, 600);
+  setZoomSliders(0.5);
+};
+
+window.setPreset = axis => {
+  const c = modelCenter.clone(), d = modelRadius * 2.2;
+  const pos = { front: new THREE.Vector3(c.x, c.y, c.z + d), back: new THREE.Vector3(c.x, c.y, c.z - d), left: new THREE.Vector3(c.x - d, c.y, c.z), right: new THREE.Vector3(c.x + d, c.y, c.z), top: new THREE.Vector3(c.x, c.y + d, c.z) };
+  if(pos[axis]) startCameraTween(pos[axis], c, 600);
+};
+
+/* Zoom Sliders Across All Views */
+window.applyZoomPercent = function(val){
+  zoomT = THREE.MathUtils.clamp(val / 1000, 0, 1);
+  const dir = camera.position.clone().sub(controls.target);
+  if(dir.lengthSq() < 1e-8) dir.set(0, 0.2, 1);
+  dir.normalize();
+  const minD = Math.max(modelRadius * 0.18, 0.02), maxD = Math.max(modelRadius * 3, minD + 0.1);
+  const distance = maxD + (minD - maxD) * zoomT;
+  camera.position.copy(controls.target.clone().add(dir.multiplyScalar(distance)));
+};
+
+window.applyZoomOffset = function(delta){
+  zoomT = THREE.MathUtils.clamp(zoomT + delta, 0, 1);
+  setZoomSliders(zoomT);
+  window.applyZoomPercent(zoomT * 1000);
+};
+
+function setZoomSliders(val){
+  const intVal = Math.round(val * 1000);
+  ['zoom-home', 'zoom-lab', 'zoom-quiz'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = intVal;
+  });
+}
+
+/* Tools (Wire, Grid, Axes) in Lab & Quiz */
+window.toggleWireframe = function(){
+  isWireframe = !isWireframe;
+  document.querySelectorAll('#tool-wire-lab, #tool-wire-quiz').forEach(b => b.classList.toggle('active', isWireframe));
+  allMeshes.forEach(m => {
+    if(m.material){
+      if(Array.isArray(m.material)) m.material.forEach(mat => mat.wireframe = isWireframe);
+      else m.material.wireframe = isWireframe;
+    }
+  });
+};
+
+window.toggleGrid = function(){
+  if(gridHelper){
+    scene.remove(gridHelper); gridHelper = null;
+    document.querySelectorAll('#tool-grid-lab, #tool-grid-quiz').forEach(b => b.classList.remove('active'));
+    return;
+  }
+  gridHelper = new THREE.GridHelper(modelRadius * 3, 20, 0x38bdf8, 0x1e293b);
+  gridHelper.position.y = modelCenter.y - modelRadius * 0.95;
+  scene.add(gridHelper);
+  document.querySelectorAll('#tool-grid-lab, #tool-grid-quiz').forEach(b => b.classList.add('active'));
+};
+
+window.toggleAxes = function(){
+  if(axesHelper){
+    scene.remove(axesHelper); axesHelper = null;
+    document.querySelectorAll('#tool-axes-lab, #tool-axes-quiz').forEach(b => b.classList.remove('active'));
+    return;
+  }
+  axesHelper = new THREE.AxesHelper(modelRadius * 0.8);
+  axesHelper.position.copy(modelCenter);
+  scene.add(axesHelper);
+  document.querySelectorAll('#tool-axes-lab, #tool-axes-quiz').forEach(b => b.classList.add('active'));
+};
+
+/* ==========================================================================
+   LAB SIDEBAR & HIERARCHY (ALL COMPONENTS INCLUDED)
+   ========================================================================== */
+let currentLabCategory = 'all';
+
+window.filterCategory = function(cat){
+  currentLabCategory = cat;
+  document.getElementById('filter-all').classList.toggle('active', cat === 'all');
+  document.getElementById('filter-brain').classList.toggle('active', cat === 'brain');
+  document.getElementById('filter-spine').classList.toggle('active', cat === 'spine');
+  showCategory(cat);
+  buildLabTree(); 
+};
+
+function buildLabTree(){
+  const container = document.getElementById('lab-tree');
+  container.innerHTML = '';
+
+  const allKeys = Array.from(meshGroups.keys());
+  let targetKeys = allKeys;
+  if(currentLabCategory === 'brain') targetKeys = allKeys.filter(k => BRAIN_GROUPS.has(k));
+  else if(currentLabCategory === 'spine') targetKeys = allKeys.filter(k => SPINE_GROUPS.has(k));
+
+  const sections = [
+    ['Brain Atlas', targetKeys.filter(k => BRAIN_GROUPS.has(k))],
+    ['Spinal Column', targetKeys.filter(k => SPINE_GROUPS.has(k))],
+    ['Additional Anatomy', targetKeys.filter(k => !BRAIN_GROUPS.has(k) && !SPINE_GROUPS.has(k))]
+  ];
+
+  sections.forEach(([title, keys]) => {
+    if(!keys.length) return;
+    const h = document.createElement('div');
+    h.className = 'section-title';
+    h.innerHTML = `<span>${title}</span><span>${keys.length} groups</span>`;
+    container.appendChild(h);
+
+    keys.forEach(k => {
+      const g = meshGroups.get(k);
+
+      // 1. Main Group Row
+      const row = document.createElement('div');
+      row.className = 'group-row';
+      row.dataset.key = k;
+      row.innerHTML = `
+        <span class="accordion-arrow" style="font-size:9px;color:#94a3b8;transition:.2s;display:inline-block">▶</span>
+        <button class="eye-btn on" title="Toggle visibility">${EYE_ON_SVG}</button>
+        <span class="color-dot" style="background:#${g.color.getHexString()}"></span>
+        <span class="group-name">${GROUP_LABELS[k] || k}</span>
+        <span class="group-count" style="background:#f1f5f9;padding:1px 6px;border-radius:10px">${g.meshes.length}</span>
+      `;
+
+      // 2. Dropdown Container for its sub-components
+      const subList = document.createElement('div');
+      subList.style.display = 'none';
+      subList.style.paddingLeft = '20px';
+      subList.style.borderLeft = '2px solid #e2e8f0';
+      subList.style.marginLeft = '12px';
+      subList.style.marginBottom = '6px';
+
+      // Populate sub-components
+      g.meshes.slice().sort((a,b) => structureName(a).localeCompare(structureName(b))).forEach(m => {
+        const subRow = document.createElement('div');
+        subRow.className = 'group-row';
+        subRow.style.fontSize = '11.5px';
+        subRow.style.padding = '5px 8px';
+        subRow.innerHTML = `
+          <button class="eye-btn on" style="width:18px;height:18px">${EYE_ON_SVG}</button>
+          <span class="group-name" style="color:#475569">${structureName(m)}</span>
+        `;
+
+        const subEye = subRow.querySelector('.eye-btn');
+        subEye.onclick = e => {
+          e.stopPropagation();
+          m.visible = !m.visible;
+          subEye.classList.toggle('on', m.visible);
+          subEye.innerHTML = m.visible ? EYE_ON_SVG : EYE_OFF_SVG;
+        };
+
+        // Clicking sub-component isolates it and shows Exit button!
+        subRow.onclick = e => {
+          e.stopPropagation();
+          document.getElementById('btn-exit-isolate').style.display = 'block';
+          isolateSingleMesh(m);
+        };
+
+        subList.appendChild(subRow);
+      });
+
+      // Eye toggle for whole group
+      const eye = row.querySelector('.eye-btn');
+      eye.onclick = e => {
+        e.stopPropagation();
+        g.visible = !g.visible;
+        eye.classList.toggle('on', g.visible);
+        eye.innerHTML = g.visible ? EYE_ON_SVG : EYE_OFF_SVG;
+        g.meshes.forEach(m => m.visible = g.visible);
+      };
+
+      // Clicking main group toggles dropdown open/close & focuses group
+      row.onclick = () => {
+        const isOpen = subList.style.display === 'block';
+        subList.style.display = isOpen ? 'none' : 'block';
+        row.querySelector('.accordion-arrow').style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+        focusGroup(g);
+      };
+
+      // Double-clicking main group isolates whole group
+      row.ondblclick = () => {
+        document.getElementById('btn-exit-isolate').style.display = 'block';
+        isolateGroup(g);
+      };
+
+      container.appendChild(row);
+      container.appendChild(subList);
+    });
+  });
+}
+
+function focusGroup(g){
+  const box = new THREE.Box3();
+  g.meshes.forEach(m => { if(m.visible) box.expandByObject(m); });
+  if(box.isEmpty()) return;
+  const center = box.getCenter(new THREE.Vector3());
+  controls.target.copy(center);
+  startCameraTween(new THREE.Vector3(center.x, center.y + 0.1, center.z + modelRadius * 0.9), center, 650);
+}
+
+function isolateGroup(targetGroup){
+  meshGroups.forEach(g => {
+    g.visible = (g === targetGroup);
+    g.meshes.forEach(m => m.visible = g.visible);
+  });
+  updateEyeButtons();
+  focusGroup(targetGroup);
+}
+
+function isolateSingleMesh(targetMesh){
+  allMeshes.forEach(m => m.visible = (m === targetMesh));
+  meshGroups.forEach(g => {
+    g.visible = g.meshes.includes(targetMesh);
+  });
+  updateEyeButtons();
+  document.getElementById('btn-exit-isolate').style.display = 'block';
+  inspectMesh(targetMesh);
+}
+
+function updateEyeButtons(){
+  document.querySelectorAll('.group-row').forEach(row => {
+    const g = meshGroups.get(row.dataset.key);
+    const eye = row.querySelector('.eye-btn');
+    if(g && eye){
+      eye.classList.toggle('on', g.visible);
+      eye.innerHTML = g.visible ? EYE_ON_SVG : EYE_OFF_SVG;
+    }
+  });
+}
+
+window.filterCategory = function(cat){
+  document.getElementById('filter-all').classList.toggle('active', cat === 'all');
+  document.getElementById('filter-brain').classList.toggle('active', cat === 'brain');
+  document.getElementById('filter-spine').classList.toggle('active', cat === 'spine');
+  showCategory(cat);
+};
+
+function showCategory(cat){
+  allMeshes.forEach(m => {
+    const k = groupKeyFor(m);
+    if(cat === 'all') m.visible = true;
+    else if(cat === 'brain') m.visible = BRAIN_GROUPS.has(k);
+    else if(cat === 'spine') m.visible = SPINE_GROUPS.has(k);
+  });
+  meshGroups.forEach(g => {
+    g.visible = g.meshes.some(m => m.visible);
+  });
+  updateEyeButtons();
+}
+
+document.getElementById('lab-search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.group-row').forEach(r => {
+    const txt = r.querySelector('.group-name').textContent.toLowerCase();
+    r.style.display = (!q || txt.includes(q)) ? 'flex' : 'none';
+  });
+});
+
+/* ==========================================================================
+   CLINICAL EXAM (FILTER ONLY CHANGES 3D VIEW, NOT QUESTION!)
+   ========================================================================== */
+let quizFilter = 'all';
+let quizPool = [], quizIdx = 0, quizScore = 0, currentTarget = null, hasAnswered = false;
+
+window.setQuizFilter = function(filter){
+  quizFilter = filter;
+  document.getElementById('quiz-filter-all').classList.toggle('active', filter === 'all');
+  document.getElementById('quiz-filter-brain').classList.toggle('active', filter === 'brain');
+  document.getElementById('quiz-filter-spine').classList.toggle('active', filter === 'spine');
+  // ONLY changes 3D model visibility, does NOT reset the question!
+  showCategory(quizFilter);
+};
+
+function startQuiz(){
+  showCategory(quizFilter);
+  const seen = new Set();
+  quizPool = [];
+  allMeshes.slice().sort(() => Math.random() - 0.5).forEach(m => {
+    const n = structureName(m);
+    if(n && !seen.has(n) && n !== 'Unnamed Structure'){
+      seen.add(n);
+      quizPool.push({ name: n, mesh: m });
+    }
+  });
+  quizPool = quizPool.slice(0, 5);
+
+  quizIdx = 0; quizScore = 0;
+  document.getElementById('quiz-score-display').textContent = '0';
+  loadQuestion(0);
+}
+
+function loadQuestion(i){
+  hasAnswered = false;
+  const feed = document.getElementById('quiz-feedback');
+  const btn = document.getElementById('btn-quiz-next');
+  const promptLabel = document.querySelector('.quiz-sub');
+  
+  feed.style.display = 'none';
+  btn.textContent = 'Skip Question';
+
+  if(i >= quizPool.length){
+    // 1. Hide "Locate and click on:" when quiz finishes
+    if(promptLabel) promptLabel.style.display = 'none';
+    
+    document.getElementById('quiz-prog-text').textContent = 'Evaluation Complete';
+    document.getElementById('quiz-target-display').innerHTML = `Final Score: <span style="color:var(--good);font-size:18px;">${quizScore} / ${quizPool.length}</span>`;
+    btn.textContent = 'Retake Quiz';
+    currentTarget = null;
+    if(typeof confetti === 'function') confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
+    return;
+  }
+
+  // 2. Ensure "Locate and click on:" is visible and fixed (no rephrasing)
+  if(promptLabel){
+    promptLabel.style.display = 'block';
+    promptLabel.textContent = 'LOCATE AND CLICK ON:';
+  }
+
+  currentTarget = quizPool[i];
+  document.getElementById('quiz-prog-text').textContent = `Question ${i + 1} of ${quizPool.length}`;
+  document.getElementById('quiz-target-display').textContent = currentTarget.name;
+}
+
+function handleExamPick(clickedMesh){
+  if(currentView !== 'quiz' || !currentTarget || hasAnswered) return;
+  hasAnswered = true;
+
+  const clickedName = structureName(clickedMesh);
+  const correct = (clickedMesh === currentTarget.mesh || clickedName === currentTarget.name);
+  const feed = document.getElementById('quiz-feedback');
+  const btn = document.getElementById('btn-quiz-next');
+
+  feed.style.display = 'block';
+  if(correct){
+    quizScore++;
+    document.getElementById('quiz-score-display').textContent = String(quizScore);
+    feed.className = 'quiz-feedback correct';
+    feed.innerHTML = `<b>✓ Correct Identification!</b><br>${currentTarget.name}`;
+  } else {
+    feed.className = 'quiz-feedback wrong';
+    feed.innerHTML = `<b>✗ Incorrect.</b><br>You selected: <b>${clickedName}</b>`;
+  }
+
+  const box = new THREE.Box3().setFromObject(clickedMesh);
+  const center = box.getCenter(new THREE.Vector3());
+  startCameraTween(new THREE.Vector3(center.x, center.y + 0.1, center.z + modelRadius * 0.8), center, 650);
+
+  btn.textContent = (quizIdx + 1 < quizPool.length) ? 'Next Question →' : 'View Final Score';
+}
+
+document.getElementById('btn-quiz-next').onclick = () => {
+  if(quizIdx >= quizPool.length){ startQuiz(); return; }
+  quizIdx++;
+  loadQuestion(quizIdx);
+};
+
+/* ==========================================================================
+   RAYCASTING & INTERACTION (CLICK & DOUBLE-CLICK)
+   ========================================================================== */
+const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2(-10, -10);
+let pointerDown = { x: 0, y: 0 };
+
+renderer.domElement.addEventListener('pointermove', e => {
+  const r = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+  pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+});
+renderer.domElement.addEventListener('pointerdown', e => { pointerDown.x = e.clientX; pointerDown.y = e.clientY; });
+
+renderer.domElement.addEventListener('click', e => {
+  if(Math.hypot(e.clientX - pointerDown.x, e.clientY - pointerDown.y) > 5) return;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(allMeshes.filter(m => m.visible), true);
+  if(hits.length){
+    const clicked = hits[0].object;
+    if(currentView === 'quiz') handleExamPick(clicked);
+    else if(currentView === 'lab') inspectMesh(clicked);
+  }
+});
+
+// Double click 3D mesh to isolate it!
+renderer.domElement.addEventListener('dblclick', () => {
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(allMeshes.filter(m => m.visible), true);
+  if(hits.length && currentView === 'lab'){
+    isolateSingleMesh(hits[0].object);
+  }
+});
+
+let selectedHighlight = null;
+
+function clearSelectedHighlight(){
+  if(selectedHighlight){
+    scene.remove(selectedHighlight);
+    selectedHighlight.geometry.dispose();
+    selectedHighlight.material.dispose();
+    selectedHighlight = null;
+  }
+}
+
+function highlightMesh(m){
+  clearSelectedHighlight();
+  if(!m) return;
+  const edges = new THREE.EdgesGeometry(m.geometry, 0.8);
+  selectedHighlight = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00f090, linewidth: 2 }));
+  selectedHighlight.matrixAutoUpdate = false;
+  selectedHighlight.matrix.copy(m.matrixWorld);
+  scene.add(selectedHighlight);
+}
+
+window.restoreFromIsolation = function(){
+  showCategory(currentLabCategory);
+  clearSelectedHighlight();
+  document.getElementById('btn-exit-isolate').style.display = 'none';
+  resetCamera();
+};
+
+function inspectMesh(m){
+  const name = structureName(m);
+  const k = groupKeyFor(m);
+  const insp = document.getElementById('lab-inspector');
+  insp.style.display = 'block';
+  document.getElementById('insp-name').textContent = name;
+  document.getElementById('insp-group').textContent = GROUP_LABELS[k] || k;
+  document.getElementById('insp-source').textContent = m.userData.source || 'Atlas';
+
+  highlightMesh(m);
+
+  const box = new THREE.Box3().setFromObject(m);
+  const center = box.getCenter(new THREE.Vector3());
+  startCameraTween(new THREE.Vector3(center.x, center.y + 0.1, center.z + modelRadius * 0.7), center, 600);
+}
+
+function clearHover(){ if(hoverEdges){ scene.remove(hoverEdges); hoverEdges.geometry.dispose(); hoverEdges.material.dispose(); hoverEdges = null; } }
+function updateHover(){
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(allMeshes.filter(m => m.visible), true);
+  const hit = hits.length ? hits[0].object : null;
+  if(hit === hover) return;
+  clearHover(); hover = hit;
+  if(hit && currentView !== 'overview'){
+    const edges = new THREE.EdgesGeometry(hit.geometry, 0.8);
+    hoverEdges = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85 }));
+    hoverEdges.matrixAutoUpdate = false;
+    hoverEdges.matrix.copy(hit.matrixWorld);
+    scene.add(hoverEdges);
+    renderer.domElement.style.cursor = 'pointer';
+  } else {
+    renderer.domElement.style.cursor = 'grab';
+  }
+}
+
+/* Global Window Resize */
+window.addEventListener('resize', () => {
+  const containerId = (currentView === 'overview') ? 'overview-stage' : (currentView === 'lab' ? 'lab-stage' : 'quiz-stage');
+  mountCanvas(containerId);
+});
+
+/* Render Loop */
+function animate(now){
+  requestAnimationFrame(animate);
+  updateCameraTween(now || performance.now());
+  controls.update();
+  updateHover();
+  if(hoverEdges && hover) hoverEdges.matrix.copy(hover.matrixWorld);
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>

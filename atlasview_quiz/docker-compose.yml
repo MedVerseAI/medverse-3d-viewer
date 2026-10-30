@@ -1,0 +1,8 @@
+services:
+  atlasview:
+    build: .
+    image: atlasview:latest
+    container_name: atlasview
+    ports:
+      - "8080:80"
+    restart: unless-stopped

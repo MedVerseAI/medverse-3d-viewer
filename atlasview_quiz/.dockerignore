@@ -1,0 +1,9 @@
+.git
+.gitignore
+README.md
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+*.zip
+*.tar
+*.tar.gz

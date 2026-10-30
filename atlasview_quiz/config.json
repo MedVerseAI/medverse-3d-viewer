@@ -1,0 +1,21 @@
+{
+  "blend_path": "../brainnetome_bodyparts3d_project/outputs/final/anatomical_model.blend",
+  "blender_exe": "E:/Programs/blender/blender.exe",
+  "output_glb": "web/model.glb",
+
+  "backup_existing": true,
+  "docker_rebuild": false,
+
+  "export": {
+    "draco": true,
+    "draco_level": 6,
+    "apply_modifiers": true,
+    "export_extras": true,
+    "y_up": true,
+    "only_visible": false,
+    "only_selected": false,
+    "cameras": false,
+    "lights": false,
+    "animations": false
+  }
+}

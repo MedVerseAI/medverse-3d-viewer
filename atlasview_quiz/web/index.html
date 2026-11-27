@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MedVerse — Medical 3D Anatomy Platform</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230284c7'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='sans-serif' font-weight='800' font-size='22' fill='white'%3E+%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,53 +26,60 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--bg-body);color:var(--text-dark)}
+html,body{height:100%;overflow:hidden;background:var(--bg-body);color:var(--text-dark);display:flex;flex-direction:column}
 button,input{font:inherit}
 button{color:inherit}
 
 /* Header Navbar */
 .navbar{
-  height:68px;background:#ffffff;border-bottom:1px solid var(--border);
+  height:64px;flex-shrink:0;background:#ffffff;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 36px;z-index:50;position:relative;
+  padding:0 32px;z-index:50;position:relative;
 }
 .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
 .brand-icon{
-  width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0ea5e9);
+  width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#0ea5e9);
   display:grid;place-items:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 2px 8px rgba(2,132,199,0.25);
 }
 .brand-title{font-size:16px;font-weight:800;letter-spacing:-0.02em}
-.brand-badge{font-size:10px;background:#e0f2fe;color:var(--primary);padding:2px 8px;border-radius:6px;font-weight:700}
 
 .nav-tabs{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px}
 .nav-tab{border:0;background:transparent;padding:7px 18px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:.15s}
 .nav-tab:hover{color:var(--text-dark)}
 .nav-tab.active{background:#ffffff;color:var(--primary);box-shadow:0 1px 3px rgba(0,0,0,0.08);font-weight:700}
 
-/* App Main Container (Fixed 100vh Landscape Layout) */
-#app-main{height:calc(100vh - 68px);position:relative;overflow:hidden}
-.page-view{display:none;height:100%;padding:28px 36px;overflow:hidden}
+/* App Main Container */
+#app-main{flex:1;min-height:0;position:relative;overflow:hidden}
+.page-view{display:none;height:100%;padding:22px 32px;overflow:hidden}
 .page-view.active{display:flex}
+
+/* Attribution Footer */
+.attribution-footer{
+  flex-shrink:0;background:#ffffff;border-top:1px solid var(--border);
+  padding:6px 32px;font-size:11px;color:var(--text-muted);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;
+  line-height:1.4;
+}
+.attribution-footer a{color:var(--primary);text-decoration:none;font-weight:600}
+.attribution-footer a:hover{text-decoration:underline}
 
 /* ==========================================================================
    VIEW 1: AESTHETIC LANDSCAPE HOME
    ========================================================================== */
-#view-overview{gap:48px;align-items:center}
-.overview-left{width:460px;flex-shrink:0;display:flex;flex-direction:column;gap:22px}
-.hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--primary);background:#e0f2fe;padding:5px 14px;border-radius:100px;width:max-content;text-transform:uppercase}
-.hero-h1{font-size:42px;font-weight:800;line-height:1.15;letter-spacing:-0.03em}
+#view-overview{gap:40px;align-items:center}
+.overview-left{width:440px;flex-shrink:0;display:flex;flex-direction:column;gap:20px}
+.hero-h1{font-size:40px;font-weight:800;line-height:1.15;letter-spacing:-0.03em}
 .hero-desc{font-size:15px;color:var(--text-muted);line-height:1.65}
-.hero-actions{display:flex;gap:12px;margin-top:6px}
+.hero-actions{display:flex;gap:12px;margin-top:4px;flex-wrap:wrap}
 
-/* Aesthetic Pill Buttons */
 .btn-pill-primary{
-  background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border:0;padding:13px 26px;
+  background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border:0;padding:12px 24px;
   border-radius:100px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s;
   box-shadow:0 4px 14px rgba(2,132,199,0.28);display:inline-flex;align-items:center;gap:8px;
 }
 .btn-pill-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(2,132,199,0.38)}
 .btn-pill-secondary{
-  background:#ffffff;border:1px solid var(--border);color:var(--text-dark);padding:13px 24px;
+  background:#ffffff;border:1px solid var(--border);color:var(--text-dark);padding:12px 22px;
   border-radius:100px;font-weight:600;font-size:13px;cursor:pointer;transition:.2s;
   display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.03);
 }
@@ -86,7 +94,6 @@ button{color:inherit}
 .hud-tag{font:10px 'JetBrains Mono';color:#38bdf8;background:rgba(14,165,233,0.15);padding:4px 10px;border-radius:6px;border:1px solid rgba(56,189,248,0.3)}
 .hud-hint{font:10px 'JetBrains Mono';color:#94a3b8}
 
-/* Home Minimal Zoom Bar */
 .home-zoom-bar{
   position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
   background:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border:1px solid #334155;
@@ -122,7 +129,7 @@ button{color:inherit}
 .group-row:hover{background:#f1f5f9}
 .eye-btn{border:0;background:transparent;cursor:pointer;color:#94a3b8;display:grid;place-items:center;width:22px;height:22px}
 .eye-btn.on{color:var(--primary)}
-.color-dot{width:8px;height:8px;border-radius:50%}
+.color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .group-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
 .group-count{font:9px 'JetBrains Mono';color:#94a3b8}
 
@@ -130,13 +137,13 @@ button{color:inherit}
 
 /* Unified Floating Controls Card */
 .controls-hud-card{
-  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
   background:rgba(15,23,42,0.92);backdrop-filter:blur(16px);border:1px solid #334155;
   border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:8px;
-  z-index:30;box-shadow:0 14px 40px rgba(0,0,0,0.45);
+  z-index:30;box-shadow:0 14px 40px rgba(0,0,0,0.45);max-width:calc(100% - 24px);
 }
-.hud-row-tools{display:flex;align-items:center;gap:6px}
-.tool-btn{border:0;background:rgba(255,255,255,0.06);color:#f8fafc;padding:5px 11px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;transition:.15s}
+.hud-row-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
+.tool-btn{border:0;background:rgba(255,255,255,0.06);color:#f8fafc;padding:5px 10px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;transition:.15s}
 .tool-btn:hover{background:rgba(255,255,255,0.14)}
 .tool-btn.active{background:var(--primary);color:#fff}
 .tool-divider{width:1px;height:18px;background:#334155;margin:0 4px}
@@ -148,27 +155,25 @@ button{color:inherit}
 
 /* Floating Inspector Card in Lab */
 #lab-inspector{
-  position:absolute;top:16px;right:16px;width:260px;background:rgba(15,23,42,0.92);
+  position:absolute;top:16px;right:16px;width:270px;background:rgba(15,23,42,0.92);
   backdrop-filter:blur(16px);border:1px solid #334155;border-radius:12px;padding:14px;
   color:#fff;display:none;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 .insp-head{font:9.5px 'JetBrains Mono';color:#38bdf8;text-transform:uppercase;margin-bottom:4px}
 .insp-title{font-size:13px;font-weight:700;margin-bottom:10px}
-.insp-kv{display:flex;justify-content:space-between;font-size:11.5px;color:#94a3b8;padding:4px 0;border-top:1px solid rgba(255,255,255,0.06)}
-.insp-kv b{color:#f8fafc}
+.insp-kv{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:#94a3b8;padding:4px 0;border-top:1px solid rgba(255,255,255,0.06)}
+.insp-kv b{color:#f8fafc;text-align:right;word-break:break-word}
 
 /* ==========================================================================
-   VIEW 3: CLINICAL EXAM
+   VIEW 3: QUIZ
    ========================================================================== */
 #view-quiz{gap:20px;height:100%}
 .quiz-left-panel{width:360px;flex-shrink:0;display:flex;flex-direction:column;gap:12px}
 
-/* Outer Category Tabs for Quiz */
 .quiz-outer-tabs{display:flex;gap:4px;background:#e2e8f0;padding:4px;border-radius:10px}
 .quiz-tab-btn{flex:1;border:0;background:transparent;padding:6px;font-size:12px;font-weight:600;color:var(--text-muted);border-radius:7px;cursor:pointer;transition:.15s}
 .quiz-tab-btn.active{background:#ffffff;color:var(--primary);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
 
-/* Compact Aesthetic Question Card */
 .quiz-card{
   background:#ffffff;border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 4px 14px rgba(0,0,0,0.03);
@@ -197,6 +202,28 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
 #app-loader{position:fixed;inset:0;background:#fff;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .spin{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--primary);border-radius:50%;animation:rotate .8s linear infinite}
 @keyframes rotate{to{transform:rotate(360deg)}}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE BREAKPOINTS (<= 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+  html, body { height: auto; min-height: 100%; overflow-y: auto; overflow-x: hidden; }
+  .navbar { padding: 10px 16px; height: auto; flex-wrap: wrap; gap: 10px; }
+  .nav-tab { padding: 6px 12px; font-size: 12px; }
+  #app-main { overflow: visible; height: auto; }
+  .page-view { height: auto; padding: 16px; overflow: visible; flex-direction: column; }
+  #view-overview { gap: 20px; align-items: stretch; }
+  .overview-left { width: 100%; }
+  .hero-h1 { font-size: 28px; }
+  .overview-right { width: 100%; height: 55vh; min-height: 320px; }
+  #view-lab, #view-quiz { flex-direction: column; height: auto; }
+  .lab-sidebar, .quiz-left-panel { width: 100%; max-height: 42vh; }
+  .lab-stage-wrap, .quiz-stage-wrap { width: 100%; height: 56vh; min-height: 340px; }
+  .controls-hud-card { bottom: 10px; padding: 8px 10px; }
+  .tool-divider { display: none; }
+  #lab-inspector { width: calc(100% - 24px); right: 12px; top: 12px; }
+  .attribution-footer { padding: 10px 16px; font-size: 10.5px; }
+}
 </style>
 </head>
 <body>
@@ -218,9 +245,7 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
 
   <main id="app-main">
 
-    <!-- ==================================================================
-         VIEW 1: AESTHETIC LANDSCAPE OVERVIEW (HOME)
-         ================================================================== -->
+    <!-- VIEW 1: LANDSCAPE OVERVIEW (HOME) -->
     <section class="page-view active" id="view-overview">
       <div class="overview-left">
         <h1 class="hero-h1">Interactive Neuro-Spinal 3D Anatomy Platform.</h1>
@@ -237,25 +262,21 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
         <div class="viewport-card" id="overview-stage">
           <div class="viewport-hud">
             <span class="hud-tag">INTERACTIVE PREVIEW</span>
-            <span class="hud-hint">Click & drag to orbit</span>
+            <span class="hud-hint">Drag to orbit · Scroll/pinch to zoom</span>
           </div>
 
-          <!-- Minimal Zoom Bar on Home -->
           <div class="home-zoom-bar">
-            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <button onclick="applyZoomOffset(-0.06)" aria-label="Zoom out">−</button>
             <input type="range" min="0" max="1000" value="500" id="zoom-home" oninput="applyZoomPercent(this.value)">
-            <button onclick="applyZoomOffset(0.06)">+</button>
+            <button onclick="applyZoomOffset(0.06)" aria-label="Zoom in">+</button>
             <button onclick="resetCamera()" style="font-size:11px;padding:0 10px;width:auto;border-radius:100px;margin-left:4px">Reset</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================================================================
-         VIEW 2: ANATOMY LAB
-         ================================================================== -->
+    <!-- VIEW 2: ANATOMY LAB -->
     <section class="page-view" id="view-lab">
-      <!-- Left Structure Directory -->
       <aside class="lab-sidebar">
         <div class="sidebar-head">
           <input class="search-input" id="lab-search" placeholder="Filter anatomy structures…">
@@ -268,20 +289,19 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
         <div class="structure-list" id="lab-tree"></div>
       </aside>
 
-      <!-- Right 3D Stage -->
       <div class="lab-stage-wrap" id="lab-stage">
         <button id="btn-exit-isolate" onclick="restoreFromIsolation()" style="display:none;position:absolute;top:16px;left:16px;z-index:30;background:#0284c7;color:#fff;border:0;padding:8px 16px;border-radius:100px;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.4)">
           ✕ Exit Isolation
         </button>
-        <!-- Floating Inspector -->
+
         <div id="lab-inspector">
           <div class="insp-head">Selected Structure</div>
           <div class="insp-title" id="insp-name">—</div>
           <div class="insp-kv"><span>Group:</span><b id="insp-group">—</b></div>
           <div class="insp-kv"><span>Dataset:</span><b id="insp-source">—</b></div>
+          <div class="insp-kv"><span>Ontology ID:</span><b id="insp-ontology">—</b></div>
         </div>
 
-        <!-- Controls HUD in Lab -->
         <div class="controls-hud-card" id="hud-lab">
           <div class="hud-row-tools">
             <button class="tool-btn" onclick="setPreset('front')">Front</button>
@@ -296,28 +316,24 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
             <button class="tool-btn" onclick="resetCamera()">Reset</button>
           </div>
           <div class="zoom-bar">
-            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <button onclick="applyZoomOffset(-0.06)" aria-label="Zoom out">−</button>
             <input type="range" class="zoom-slider" id="zoom-lab" min="0" max="1000" value="500" oninput="applyZoomPercent(this.value)">
-            <button onclick="applyZoomOffset(0.06)">+</button>
+            <button onclick="applyZoomOffset(0.06)" aria-label="Zoom in">+</button>
             <span class="zoom-lbl">ZOOM</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================================================================
-         VIEW 3: QUIZ
-         ================================================================== -->
+    <!-- VIEW 3: QUIZ -->
     <section class="page-view" id="view-quiz">
       <div class="quiz-left-panel">
-        <!-- Outside Tabs -->
         <div class="quiz-outer-tabs">
           <button class="quiz-tab-btn active" id="quiz-filter-all" onclick="setQuizFilter('all')">Full Anatomy</button>
           <button class="quiz-tab-btn" id="quiz-filter-brain" onclick="setQuizFilter('brain')">Brain</button>
           <button class="quiz-tab-btn" id="quiz-filter-spine" onclick="setQuizFilter('spine')">Spine</button>
         </div>
 
-        <!-- Compact Question Card -->
         <div class="quiz-card">
           <div class="quiz-meta">
             <span class="quiz-prog" id="quiz-prog-text">Question 1 of 5</span>
@@ -325,7 +341,7 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
           </div>
 
           <div class="quiz-question-box">
-            <div class="quiz-sub">Locate and click on:</div>
+            <div class="quiz-sub">LOCATE AND CLICK ON:</div>
             <div class="quiz-target" id="quiz-target-display">—</div>
           </div>
 
@@ -335,9 +351,7 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
         </div>
       </div>
 
-      <!-- Right 3D Viewport in Quiz Mode -->
       <div class="quiz-stage-wrap" id="quiz-stage">
-        <!-- Controls HUD in Quiz (Includes Grid now!) -->
         <div class="controls-hud-card" id="hud-quiz">
           <div class="hud-row-tools">
             <button class="tool-btn" onclick="setPreset('front')">Front</button>
@@ -352,9 +366,9 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
             <button class="tool-btn" onclick="resetCamera()">Reset</button>
           </div>
           <div class="zoom-bar">
-            <button onclick="applyZoomOffset(-0.06)">−</button>
+            <button onclick="applyZoomOffset(-0.06)" aria-label="Zoom out">−</button>
             <input type="range" class="zoom-slider" id="zoom-quiz" min="0" max="1000" value="500" oninput="applyZoomPercent(this.value)">
-            <button onclick="applyZoomOffset(0.06)">+</button>
+            <button onclick="applyZoomOffset(0.06)" aria-label="Zoom in">+</button>
             <span class="zoom-lbl">ZOOM</span>
           </div>
         </div>
@@ -362,6 +376,16 @@ canvas{width:100% !important;height:100% !important;display:block;outline:none}
     </section>
 
   </main>
+
+  <!-- Mandatory Dataset Attribution & Licensing Notice -->
+  <footer class="attribution-footer" id="attribution-footer">
+    <span>
+      <strong>Anatomy Data Attribution:</strong>
+      <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/" target="_blank" rel="noopener">BodyParts3D v4.0</a> © DBCLS (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>) ·
+      <a href="https://atlas.brainnetome.org/" target="_blank" rel="noopener">Human Brainnetome Atlas</a> © CASIA (Non-Commercial / Share-Alike; Fan et al., <em>Cerebral Cortex</em> 2016)
+    </span>
+    <span>Viewer code: MIT License · Educational &amp; research use only (non-clinical)</span>
+  </footer>
 
   <!-- Loading Screen -->
   <div id="app-loader">
@@ -380,23 +404,42 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const MODEL_URL = './model.glb';
-const GROUP_LABELS={CEREBELLUM:'Cerebellum',BRAINSTEM:'Brainstem',SUBCORTICAL_STRUCTURES:'Subcortical structures',OTHER_BRAIN_STRUCTURES:'White matter / ventricles',CRANIAL_NERVES:'Cranial nerves',VERTEBRAE:'Vertebrae',INTERVERTEBRAL_DISCS:'Intervertebral discs',SPINAL_CORD:'Spinal cord',CEREBRAL_CORTEX_L:'Cerebral cortex — Left',CEREBRAL_CORTEX_R:'Cerebral cortex — Right',CEREBRAL_CORTEX:'Cerebral cortex',UNGROUPED:'Other anatomy'};
-const GROUP_ORDER=['CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES','CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX','VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD','UNGROUPED'];
-const BRAIN_GROUPS=new Set(['CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES','CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX']);
-const SPINE_GROUPS=new Set(['VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD']);
+const GROUP_LABELS = {
+  CEREBELLUM: 'Cerebellum',
+  BRAINSTEM: 'Brainstem',
+  SUBCORTICAL_STRUCTURES: 'Subcortical structures',
+  OTHER_BRAIN_STRUCTURES: 'White matter / ventricles',
+  CRANIAL_NERVES: 'Cranial nerves',
+  VERTEBRAE: 'Vertebrae',
+  INTERVERTEBRAL_DISCS: 'Intervertebral discs',
+  SPINAL_CORD: 'Spinal cord',
+  CEREBRAL_CORTEX_L: 'Cerebral cortex — Left',
+  CEREBRAL_CORTEX_R: 'Cerebral cortex — Right',
+  CEREBRAL_CORTEX: 'Cerebral cortex',
+  UNGROUPED: 'Other anatomy'
+};
+const GROUP_ORDER = [
+  'CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES',
+  'CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX',
+  'VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD','UNGROUPED'
+];
+const BRAIN_GROUPS = new Set([
+  'CEREBELLUM','BRAINSTEM','SUBCORTICAL_STRUCTURES','OTHER_BRAIN_STRUCTURES',
+  'CRANIAL_NERVES','CEREBRAL_CORTEX_L','CEREBRAL_CORTEX_R','CEREBRAL_CORTEX'
+]);
+const SPINE_GROUPS = new Set(['VERTEBRAE','INTERVERTEBRAL_DISCS','SPINAL_CORD']);
 
 let currentView = 'overview';
 
-/* SVG Icons for eye button */
 const EYE_ON_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
 const EYE_OFF_SVG = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61M2 2l20 20"/></svg>`;
 
-/* Scene, Camera, Renderer */
+/* Scene, Camera, Renderer (preserveDrawingBuffer: false for GPU performance) */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x090d16);
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 5000);
-const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: false });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -406,8 +449,8 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.075;
 controls.rotateSpeed = 0.65;
-controls.enableZoom = false; // Zoom strictly via HUD sliders
-controls.autoRotate = false; // Strictly click & drag
+controls.enableZoom = true;  // Enable mouse-wheel & mobile pinch-to-zoom cleanly
+controls.autoRotate = false;
 
 scene.add(new THREE.HemisphereLight(0xffffff, 0x0c1528, 1.4));
 const keyLight = new THREE.DirectionalLight(0xffffff, 1.7); keyLight.position.set(4, 6, 7); scene.add(keyLight);
@@ -422,35 +465,82 @@ loader.setDRACOLoader(draco);
 let allMeshes = [], meshGroups = new Map();
 let modelCenter = new THREE.Vector3(), modelRadius = 1;
 let defaultCamPos = new THREE.Vector3(), defaultTarget = new THREE.Vector3();
-let hover = null, hoverEdges = null, gridHelper = null, axesHelper = null, cameraTween = null, isWireframe = false;
+let hoverMesh = null, selectedMesh = null, gridHelper = null, axesHelper = null, cameraTween = null, isWireframe = false;
+let hoverDirty = false;
 let zoomT = 0.5;
+let syncingFromSlider = false;
 
 function cleanStructureName(raw){
   if(!raw) return 'Unnamed Structure';
-  let s = raw.replace(/__?[A-Za-z0-9]+$/g, '').replaceAll('_', ' ').trim();
+  let s = String(raw).replace(/__[A-Za-z0-9]+$/g, '').replaceAll('_', ' ').trim();
   return s.replace(/(^|\s)\S/g, l => l.toUpperCase());
 }
 
+/* Unified v0.2 + legacy v1 metadata contract parser */
 function structureName(o){
   const u = o.userData || {};
-  return cleanStructureName(u.bn_region_name || o.name || 'Unnamed structure');
+  return cleanStructureName(u.label || u.bn_region_name || o.name || 'Unnamed Structure');
 }
 
 function groupKeyFor(o){
   const u = o.userData || {};
-  if(u.source === 'Human Brainnetome' || u.bn_region_id !== undefined){
-    if(u.hemisphere === 'L') return 'CEREBRAL_CORTEX_L';
-    if(u.hemisphere === 'R') return 'CEREBRAL_CORTEX_R';
+  const grp = u.group || u.bp3d_group;
+  const side = u.side || u.hemisphere || '';
+  if(grp === 'CEREBRAL_CORTEX'){
+    if(side === 'L') return 'CEREBRAL_CORTEX_L';
+    if(side === 'R') return 'CEREBRAL_CORTEX_R';
     return 'CEREBRAL_CORTEX';
   }
-  return u.bp3d_group || 'UNGROUPED';
+  if(grp) return grp;
+  if(u.source === 'Human Brainnetome' || u.bn_region_id !== undefined){
+    if(side === 'L') return 'CEREBRAL_CORTEX_L';
+    if(side === 'R') return 'CEREBRAL_CORTEX_R';
+    return 'CEREBRAL_CORTEX';
+  }
+  return 'UNGROUPED';
+}
+
+function prepareMeshMaterial(m){
+  // Clone shared palette materials per mesh so emissive highlight never bleeds onto sibling structures
+  if(m.material){
+    if(Array.isArray(m.material)){
+      m.material = m.material.map(mat => mat ? mat.clone() : mat);
+    } else {
+      m.material = m.material.clone();
+    }
+    const primaryMat = Array.isArray(m.material) ? m.material[0] : m.material;
+    if(primaryMat && primaryMat.emissive){
+      m.userData._origEmissiveHex = primaryMat.emissive.getHex();
+      m.userData._origEmissiveIntensity = primaryMat.emissiveIntensity ?? 1.0;
+    }
+  }
+}
+
+function applyMeshEmissive(m, hex, intensity){
+  if(!m || !m.material) return;
+  const mats = Array.isArray(m.material) ? m.material : [m.material];
+  mats.forEach(mat => {
+    if(mat && mat.emissive){
+      mat.emissive.setHex(hex);
+      mat.emissiveIntensity = intensity;
+    }
+  });
+}
+
+function restoreMeshEmissive(m){
+  if(!m) return;
+  const hex = m.userData._origEmissiveHex ?? 0x000000;
+  const intensity = m.userData._origEmissiveIntensity ?? 1.0;
+  applyMeshEmissive(m, hex, intensity);
 }
 
 function registerMesh(m){
+  prepareMeshMaterial(m);
   allMeshes.push(m);
   const k = groupKeyFor(m);
   if(!meshGroups.has(k)){
-    const c = m.material?.color ? m.material.color.clone() : new THREE.Color(0x9aa8bb);
+    const primaryMat = Array.isArray(m.material) ? m.material[0] : m.material;
+    const c = primaryMat?.color ? primaryMat.color.clone() : new THREE.Color(0x9aa8bb);
     meshGroups.set(k, { key: k, meshes: [], color: c, visible: true });
   }
   meshGroups.get(k).meshes.push(m);
@@ -475,14 +565,31 @@ loader.load(MODEL_URL, gltf => {
   defaultCamPos.copy(modelCenter).add(new THREE.Vector3(0, dist * 0.12, dist));
   camera.position.copy(defaultCamPos);
   controls.target.copy(defaultTarget);
+  controls.minDistance = Math.max(modelRadius * 0.18, 0.02);
+  controls.maxDistance = Math.max(modelRadius * 3.0, controls.minDistance + 0.1);
   controls.update();
 
   buildLabTree();
   mountCanvas('overview-stage');
-  document.getElementById('app-loader').remove();
+  const loaderEl = document.getElementById('app-loader');
+  if(loaderEl) loaderEl.remove();
+
+  // Expose read-only state hook for automated QA / debugging
+  window.__MEDVERSE_DEBUG__ = {
+    getMeshCount: () => allMeshes.length,
+    getGroupKeys: () => Array.from(meshGroups.keys()),
+    getUngroupedCount: () => (meshGroups.get('UNGROUPED')?.meshes.length || 0),
+    getVisibleMeshes: () => allMeshes.filter(m => m.visible),
+    getQuizPool: () => quizPool.map(q => ({ name: q.name, visible: q.mesh.visible, group: groupKeyFor(q.mesh) })),
+    getCurrentLabCategory: () => currentLabCategory,
+    getEnableZoom: () => controls.enableZoom,
+  };
 }, undefined, err => {
   console.error(err);
-  document.getElementById('app-loader').innerHTML = '<div style="color:red">Failed to load model.glb</div>';
+  const loaderEl = document.getElementById('app-loader');
+  if(loaderEl){
+    loaderEl.innerHTML = '<div style="color:#b91c1c;font-weight:700;padding:16px;text-align:center">Failed to load model.glb — place anatomical_model_quest3_lod0.glb at web/model.glb</div>';
+  }
 });
 
 function mountCanvas(containerId){
@@ -518,7 +625,8 @@ window.switchView = function(view){
     resetCamera();
   } else if(view === 'lab'){
     mountCanvas('lab-stage');
-    showCategory('all');
+    showCategory(currentLabCategory);
+    buildLabTree();
     resetCamera();
   } else if(view === 'quiz'){
     mountCanvas('quiz-stage');
@@ -548,12 +656,19 @@ window.resetCamera = () => {
 
 window.setPreset = axis => {
   const c = modelCenter.clone(), d = modelRadius * 2.2;
-  const pos = { front: new THREE.Vector3(c.x, c.y, c.z + d), back: new THREE.Vector3(c.x, c.y, c.z - d), left: new THREE.Vector3(c.x - d, c.y, c.z), right: new THREE.Vector3(c.x + d, c.y, c.z), top: new THREE.Vector3(c.x, c.y + d, c.z) };
+  const pos = {
+    front: new THREE.Vector3(c.x, c.y, c.z + d),
+    back: new THREE.Vector3(c.x, c.y, c.z - d),
+    left: new THREE.Vector3(c.x - d, c.y, c.z),
+    right: new THREE.Vector3(c.x + d, c.y, c.z),
+    top: new THREE.Vector3(c.x, c.y + d, c.z)
+  };
   if(pos[axis]) startCameraTween(pos[axis], c, 600);
 };
 
-/* Zoom Sliders Across All Views */
+/* Zoom Sliders Synced Bidirectionally With OrbitControls */
 window.applyZoomPercent = function(val){
+  syncingFromSlider = true;
   zoomT = THREE.MathUtils.clamp(val / 1000, 0, 1);
   const dir = camera.position.clone().sub(controls.target);
   if(dir.lengthSq() < 1e-8) dir.set(0, 0.2, 1);
@@ -561,6 +676,8 @@ window.applyZoomPercent = function(val){
   const minD = Math.max(modelRadius * 0.18, 0.02), maxD = Math.max(modelRadius * 3, minD + 0.1);
   const distance = maxD + (minD - maxD) * zoomT;
   camera.position.copy(controls.target.clone().add(dir.multiplyScalar(distance)));
+  controls.update();
+  syncingFromSlider = false;
 };
 
 window.applyZoomOffset = function(delta){
@@ -570,12 +687,20 @@ window.applyZoomOffset = function(delta){
 };
 
 function setZoomSliders(val){
-  const intVal = Math.round(val * 1000);
+  const intVal = Math.round(THREE.MathUtils.clamp(val, 0, 1) * 1000);
   ['zoom-home', 'zoom-lab', 'zoom-quiz'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.value = intVal;
   });
 }
+
+controls.addEventListener('change', () => {
+  if(syncingFromSlider) return;
+  const minD = Math.max(modelRadius * 0.18, 0.02), maxD = Math.max(modelRadius * 3, minD + 0.1);
+  const d = camera.position.distanceTo(controls.target);
+  zoomT = THREE.MathUtils.clamp((maxD - d) / (maxD - minD), 0, 1);
+  setZoomSliders(zoomT);
+});
 
 /* Tools (Wire, Grid, Axes) in Lab & Quiz */
 window.toggleWireframe = function(){
@@ -614,7 +739,7 @@ window.toggleAxes = function(){
 };
 
 /* ==========================================================================
-   LAB SIDEBAR & HIERARCHY (ALL COMPONENTS INCLUDED)
+   LAB SIDEBAR & HIERARCHY (SINGLE AUTHORITATIVE filterCategory + ACCORDION SEARCH)
    ========================================================================== */
 let currentLabCategory = 'all';
 
@@ -624,14 +749,16 @@ window.filterCategory = function(cat){
   document.getElementById('filter-brain').classList.toggle('active', cat === 'brain');
   document.getElementById('filter-spine').classList.toggle('active', cat === 'spine');
   showCategory(cat);
-  buildLabTree(); 
+  buildLabTree();
+  applyLabSearch();
 };
 
 function buildLabTree(){
   const container = document.getElementById('lab-tree');
   container.innerHTML = '';
 
-  const allKeys = Array.from(meshGroups.keys());
+  const allKeys = GROUP_ORDER.filter(k => meshGroups.has(k))
+    .concat(Array.from(meshGroups.keys()).filter(k => !GROUP_ORDER.includes(k)));
   let targetKeys = allKeys;
   if(currentLabCategory === 'brain') targetKeys = allKeys.filter(k => BRAIN_GROUPS.has(k));
   else if(currentLabCategory === 'spine') targetKeys = allKeys.filter(k => SPINE_GROUPS.has(k));
@@ -644,42 +771,46 @@ function buildLabTree(){
 
   sections.forEach(([title, keys]) => {
     if(!keys.length) return;
+    const sectionWrap = document.createElement('div');
+    sectionWrap.className = 'lab-section';
+
     const h = document.createElement('div');
     h.className = 'section-title';
     h.innerHTML = `<span>${title}</span><span>${keys.length} groups</span>`;
-    container.appendChild(h);
+    sectionWrap.appendChild(h);
 
     keys.forEach(k => {
       const g = meshGroups.get(k);
+      const groupWrap = document.createElement('div');
+      groupWrap.className = 'lab-group-block';
+      groupWrap.dataset.key = k;
 
-      // 1. Main Group Row
       const row = document.createElement('div');
-      row.className = 'group-row';
+      row.className = 'group-row parent-row';
       row.dataset.key = k;
       row.innerHTML = `
         <span class="accordion-arrow" style="font-size:9px;color:#94a3b8;transition:.2s;display:inline-block">▶</span>
-        <button class="eye-btn on" title="Toggle visibility">${EYE_ON_SVG}</button>
+        <button class="eye-btn ${g.visible ? 'on' : ''}" title="Toggle visibility">${g.visible ? EYE_ON_SVG : EYE_OFF_SVG}</button>
         <span class="color-dot" style="background:#${g.color.getHexString()}"></span>
         <span class="group-name">${GROUP_LABELS[k] || k}</span>
         <span class="group-count" style="background:#f1f5f9;padding:1px 6px;border-radius:10px">${g.meshes.length}</span>
       `;
 
-      // 2. Dropdown Container for its sub-components
       const subList = document.createElement('div');
+      subList.className = 'sub-list';
       subList.style.display = 'none';
       subList.style.paddingLeft = '20px';
       subList.style.borderLeft = '2px solid #e2e8f0';
       subList.style.marginLeft = '12px';
       subList.style.marginBottom = '6px';
 
-      // Populate sub-components
       g.meshes.slice().sort((a,b) => structureName(a).localeCompare(structureName(b))).forEach(m => {
         const subRow = document.createElement('div');
-        subRow.className = 'group-row';
+        subRow.className = 'group-row child-row';
         subRow.style.fontSize = '11.5px';
         subRow.style.padding = '5px 8px';
         subRow.innerHTML = `
-          <button class="eye-btn on" style="width:18px;height:18px">${EYE_ON_SVG}</button>
+          <button class="eye-btn ${m.visible ? 'on' : ''}" style="width:18px;height:18px">${m.visible ? EYE_ON_SVG : EYE_OFF_SVG}</button>
           <span class="group-name" style="color:#475569">${structureName(m)}</span>
         `;
 
@@ -691,7 +822,6 @@ function buildLabTree(){
           subEye.innerHTML = m.visible ? EYE_ON_SVG : EYE_OFF_SVG;
         };
 
-        // Clicking sub-component isolates it and shows Exit button!
         subRow.onclick = e => {
           e.stopPropagation();
           document.getElementById('btn-exit-isolate').style.display = 'block';
@@ -701,7 +831,6 @@ function buildLabTree(){
         subList.appendChild(subRow);
       });
 
-      // Eye toggle for whole group
       const eye = row.querySelector('.eye-btn');
       eye.onclick = e => {
         e.stopPropagation();
@@ -711,7 +840,6 @@ function buildLabTree(){
         g.meshes.forEach(m => m.visible = g.visible);
       };
 
-      // Clicking main group toggles dropdown open/close & focuses group
       row.onclick = () => {
         const isOpen = subList.style.display === 'block';
         subList.style.display = isOpen ? 'none' : 'block';
@@ -719,15 +847,17 @@ function buildLabTree(){
         focusGroup(g);
       };
 
-      // Double-clicking main group isolates whole group
       row.ondblclick = () => {
         document.getElementById('btn-exit-isolate').style.display = 'block';
         isolateGroup(g);
       };
 
-      container.appendChild(row);
-      container.appendChild(subList);
+      groupWrap.appendChild(row);
+      groupWrap.appendChild(subList);
+      sectionWrap.appendChild(groupWrap);
     });
+
+    container.appendChild(sectionWrap);
   });
 }
 
@@ -760,7 +890,7 @@ function isolateSingleMesh(targetMesh){
 }
 
 function updateEyeButtons(){
-  document.querySelectorAll('.group-row').forEach(row => {
+  document.querySelectorAll('.parent-row').forEach(row => {
     const g = meshGroups.get(row.dataset.key);
     const eye = row.querySelector('.eye-btn');
     if(g && eye){
@@ -769,13 +899,6 @@ function updateEyeButtons(){
     }
   });
 }
-
-window.filterCategory = function(cat){
-  document.getElementById('filter-all').classList.toggle('active', cat === 'all');
-  document.getElementById('filter-brain').classList.toggle('active', cat === 'brain');
-  document.getElementById('filter-spine').classList.toggle('active', cat === 'spine');
-  showCategory(cat);
-};
 
 function showCategory(cat){
   allMeshes.forEach(m => {
@@ -790,34 +913,84 @@ function showCategory(cat){
   updateEyeButtons();
 }
 
-document.getElementById('lab-search').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase().trim();
-  document.querySelectorAll('.group-row').forEach(r => {
-    const txt = r.querySelector('.group-name').textContent.toLowerCase();
-    r.style.display = (!q || txt.includes(q)) ? 'flex' : 'none';
+function applyLabSearch(){
+  const inputEl = document.getElementById('lab-search');
+  const q = (inputEl ? inputEl.value : '').toLowerCase().trim();
+  document.querySelectorAll('.lab-section').forEach(sec => {
+    let anyGroupVisible = false;
+    sec.querySelectorAll('.lab-group-block').forEach(block => {
+      const parentRow = block.querySelector('.parent-row');
+      const subList = block.querySelector('.sub-list');
+      const arrow = parentRow.querySelector('.accordion-arrow');
+      const parentName = parentRow.querySelector('.group-name').textContent.toLowerCase();
+      const childRows = Array.from(subList.querySelectorAll('.child-row'));
+
+      if(!q){
+        block.style.display = 'block';
+        parentRow.style.display = 'flex';
+        childRows.forEach(cr => cr.style.display = 'flex');
+        subList.style.display = 'none';
+        if(arrow) arrow.style.transform = 'rotate(0deg)';
+        anyGroupVisible = true;
+        return;
+      }
+
+      const parentMatches = parentName.includes(q);
+      let matchedChildren = 0;
+      childRows.forEach(cr => {
+        const childTxt = cr.querySelector('.group-name').textContent.toLowerCase();
+        const match = parentMatches || childTxt.includes(q);
+        cr.style.display = match ? 'flex' : 'none';
+        if(match) matchedChildren++;
+      });
+
+      if(parentMatches || matchedChildren > 0){
+        block.style.display = 'block';
+        parentRow.style.display = 'flex';
+        subList.style.display = 'block';
+        if(arrow) arrow.style.transform = 'rotate(90deg)';
+        anyGroupVisible = true;
+      } else {
+        block.style.display = 'none';
+      }
+    });
+    sec.style.display = anyGroupVisible ? 'block' : 'none';
   });
-});
+}
+
+document.getElementById('lab-search').addEventListener('input', applyLabSearch);
 
 /* ==========================================================================
-   CLINICAL EXAM (FILTER ONLY CHANGES 3D VIEW, NOT QUESTION!)
+   CLINICAL EXAM (VISIBLE-ONLY POOL + UNBIASED FISHER-YATES SHUFFLE)
    ========================================================================== */
 let quizFilter = 'all';
 let quizPool = [], quizIdx = 0, quizScore = 0, currentTarget = null, hasAnswered = false;
+
+function fisherYatesShuffle(arr){
+  const out = arr.slice();
+  for(let i = out.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 window.setQuizFilter = function(filter){
   quizFilter = filter;
   document.getElementById('quiz-filter-all').classList.toggle('active', filter === 'all');
   document.getElementById('quiz-filter-brain').classList.toggle('active', filter === 'brain');
   document.getElementById('quiz-filter-spine').classList.toggle('active', filter === 'spine');
-  // ONLY changes 3D model visibility, does NOT reset the question!
+  // Filter 3D visibility AND rebuild quiz pool strictly from currently visible meshes
   showCategory(quizFilter);
+  startQuiz();
 };
 
 function startQuiz(){
   showCategory(quizFilter);
   const seen = new Set();
   quizPool = [];
-  allMeshes.slice().sort(() => Math.random() - 0.5).forEach(m => {
+  const visibleMeshes = allMeshes.filter(m => m.visible);
+  fisherYatesShuffle(visibleMeshes).forEach(m => {
     const n = structureName(m);
     if(n && !seen.has(n) && n !== 'Unnamed Structure'){
       seen.add(n);
@@ -836,14 +1009,12 @@ function loadQuestion(i){
   const feed = document.getElementById('quiz-feedback');
   const btn = document.getElementById('btn-quiz-next');
   const promptLabel = document.querySelector('.quiz-sub');
-  
+
   feed.style.display = 'none';
   btn.textContent = 'Skip Question';
 
   if(i >= quizPool.length){
-    // 1. Hide "Locate and click on:" when quiz finishes
     if(promptLabel) promptLabel.style.display = 'none';
-    
     document.getElementById('quiz-prog-text').textContent = 'Evaluation Complete';
     document.getElementById('quiz-target-display').innerHTML = `Final Score: <span style="color:var(--good);font-size:18px;">${quizScore} / ${quizPool.length}</span>`;
     btn.textContent = 'Retake Quiz';
@@ -852,7 +1023,6 @@ function loadQuestion(i){
     return;
   }
 
-  // 2. Ensure "Locate and click on:" is visible and fixed (no rephrasing)
   if(promptLabel){
     promptLabel.style.display = 'block';
     promptLabel.textContent = 'LOCATE AND CLICK ON:';
@@ -897,7 +1067,7 @@ document.getElementById('btn-quiz-next').onclick = () => {
 };
 
 /* ==========================================================================
-   RAYCASTING & INTERACTION (CLICK & DOUBLE-CLICK)
+   RAYCASTING & EMISSIVE HIGHLIGHTING (POINTERMOVE-THROTTLED, ZERO 60 FPS STALL)
    ========================================================================== */
 const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2(-10, -10);
 let pointerDown = { x: 0, y: 0 };
@@ -906,6 +1076,13 @@ renderer.domElement.addEventListener('pointermove', e => {
   const r = renderer.domElement.getBoundingClientRect();
   pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
   pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+  if(currentView !== 'overview'){
+    hoverDirty = true;
+  }
+});
+renderer.domElement.addEventListener('pointerleave', () => {
+  hoverDirty = false;
+  clearHover();
 });
 renderer.domElement.addEventListener('pointerdown', e => { pointerDown.x = e.clientX; pointerDown.y = e.clientY; });
 
@@ -920,7 +1097,6 @@ renderer.domElement.addEventListener('click', e => {
   }
 });
 
-// Double click 3D mesh to isolate it!
 renderer.domElement.addEventListener('dblclick', () => {
   raycaster.setFromCamera(pointer, camera);
   const hits = raycaster.intersectObjects(allMeshes.filter(m => m.visible), true);
@@ -929,25 +1105,18 @@ renderer.domElement.addEventListener('dblclick', () => {
   }
 });
 
-let selectedHighlight = null;
-
 function clearSelectedHighlight(){
-  if(selectedHighlight){
-    scene.remove(selectedHighlight);
-    selectedHighlight.geometry.dispose();
-    selectedHighlight.material.dispose();
-    selectedHighlight = null;
+  if(selectedMesh){
+    restoreMeshEmissive(selectedMesh);
+    selectedMesh = null;
   }
 }
 
 function highlightMesh(m){
   clearSelectedHighlight();
   if(!m) return;
-  const edges = new THREE.EdgesGeometry(m.geometry, 0.8);
-  selectedHighlight = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00f090, linewidth: 2 }));
-  selectedHighlight.matrixAutoUpdate = false;
-  selectedHighlight.matrix.copy(m.matrixWorld);
-  scene.add(selectedHighlight);
+  selectedMesh = m;
+  applyMeshEmissive(m, 0x10b981, 0.55);
 }
 
 window.restoreFromIsolation = function(){
@@ -960,11 +1129,13 @@ window.restoreFromIsolation = function(){
 function inspectMesh(m){
   const name = structureName(m);
   const k = groupKeyFor(m);
+  const u = m.userData || {};
   const insp = document.getElementById('lab-inspector');
   insp.style.display = 'block';
   document.getElementById('insp-name').textContent = name;
   document.getElementById('insp-group').textContent = GROUP_LABELS[k] || k;
-  document.getElementById('insp-source').textContent = m.userData.source || 'Atlas';
+  document.getElementById('insp-source').textContent = u.source || 'Atlas';
+  document.getElementById('insp-ontology').textContent = u.ontology_ids || u.entity_id || '—';
 
   highlightMesh(m);
 
@@ -973,22 +1144,36 @@ function inspectMesh(m){
   startCameraTween(new THREE.Vector3(center.x, center.y + 0.1, center.z + modelRadius * 0.7), center, 600);
 }
 
-function clearHover(){ if(hoverEdges){ scene.remove(hoverEdges); hoverEdges.geometry.dispose(); hoverEdges.material.dispose(); hoverEdges = null; } }
-function updateHover(){
+function clearHover(){
+  if(hoverMesh){
+    if(hoverMesh === selectedMesh){
+      applyMeshEmissive(hoverMesh, 0x10b981, 0.55);
+    } else {
+      restoreMeshEmissive(hoverMesh);
+    }
+    hoverMesh = null;
+  }
+  renderer.domElement.style.cursor = 'grab';
+}
+
+function updateHoverIfDirty(){
+  if(!hoverDirty) return;
+  hoverDirty = false;
+  if(currentView === 'overview'){
+    clearHover();
+    return;
+  }
   raycaster.setFromCamera(pointer, camera);
   const hits = raycaster.intersectObjects(allMeshes.filter(m => m.visible), true);
   const hit = hits.length ? hits[0].object : null;
-  if(hit === hover) return;
-  clearHover(); hover = hit;
-  if(hit && currentView !== 'overview'){
-    const edges = new THREE.EdgesGeometry(hit.geometry, 0.8);
-    hoverEdges = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85 }));
-    hoverEdges.matrixAutoUpdate = false;
-    hoverEdges.matrix.copy(hit.matrixWorld);
-    scene.add(hoverEdges);
+  if(hit === hoverMesh) return;
+  clearHover();
+  hoverMesh = hit;
+  if(hit){
+    if(hit !== selectedMesh){
+      applyMeshEmissive(hit, 0x38bdf8, 0.45);
+    }
     renderer.domElement.style.cursor = 'pointer';
-  } else {
-    renderer.domElement.style.cursor = 'grab';
   }
 }
 
@@ -1003,8 +1188,7 @@ function animate(now){
   requestAnimationFrame(animate);
   updateCameraTween(now || performance.now());
   controls.update();
-  updateHover();
-  if(hoverEdges && hover) hoverEdges.matrix.copy(hover.matrixWorld);
+  updateHoverIfDirty();
   renderer.render(scene, camera);
 }
 animate();

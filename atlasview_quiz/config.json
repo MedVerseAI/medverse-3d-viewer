@@ -1,6 +1,6 @@
 {
-  "blend_path": "../brainnetome_bodyparts3d_project/outputs/final/anatomical_model.blend",
-  "blender_exe": "E:/Programs/blender/blender.exe",
+  "blend_path": "../medverse-asset-ingestion/data/processed/run/final/anatomical_model_quest3_lod0.blend",
+  "blender_exe": "",
   "output_glb": "web/model.glb",
 
   "backup_existing": true,

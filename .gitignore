@@ -1,0 +1,13 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Local overrides
+atlasview_quiz/config.local.json
+
+# Multi-MB 3D model binaries (fetch from GitHub Releases or build via medverse-asset-ingestion)
+*.glb
+*.gltf
+*.fbx
+*.blend
+*.bak
